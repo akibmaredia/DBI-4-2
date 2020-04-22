@@ -1,0 +1,9 @@
+Steps to run
+•	Unzip the compressed file using akibMaredia_himavanthBoddu_p41.zip
+•	cd akibMaredia_himavanthBoddu_p41
+•	make a2test.out for generating dependencies and run ./a2test.out.
+•	make test.out to compile test.out(“./test.out [1-11]” to run the compiled binary where "[1-11]” denotes the query number you want to execute)
+•	./runTestCases.sh to test the output
+•	make gtest to compile Gtest.cc
+•	./gtest to run test cases
+

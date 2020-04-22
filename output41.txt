@@ -1,0 +1,35 @@
+Relation lineitem 857316
+Attribute l_discount 11
+Attribute l_returnflag 3
+Attribute l_shipmode 7
+***************************************************************************************************************************************
+Relation customer|orders|nation 1500000
+Attribute c_custkey 150000
+Attribute c_nationkey 25
+Attribute n_nationkey 25
+Attribute o_custkey 150000
+***************************************************************************************************************************************
+Relation lineitem|customer|orders 400081
+Attribute c_custkey 150000
+Attribute c_mktsegment 5
+Attribute l_orderkey 1500000
+Attribute o_custkey 150000
+Attribute o_orderdate 99996
+Attribute o_orderkey 1500000
+***************************************************************************************************************************************
+Relation lineitem|customer|orders|nation 2000405
+Attribute c_custkey 150000
+Attribute c_nationkey 25
+Attribute l_orderkey 1500000
+Attribute n_nationkey 25
+Attribute o_custkey 150000
+Attribute o_orderdate 99996
+Attribute o_orderkey 1500000
+***************************************************************************************************************************************
+Relation lineitem|part 21432
+Attribute l_partkey 200000
+Attribute l_shipinstruct 4
+Attribute l_shipmode 7
+Attribute p_container 40
+Attribute p_partkey 200000
+***************************************************************************************************************************************
