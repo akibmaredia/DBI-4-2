@@ -65,7 +65,7 @@ public:
 	int pid;  // Pipe ID
 	
 	NodeType t;
-	Schema sch;  // Ouput Schema
+	Schema schema;  // Ouput Schema
 	
 	QueryNode ();
 	QueryNode (NodeType type) : t (type) {}
@@ -100,7 +100,7 @@ public:
 		cout << "Input Pipe 2 ID : " << right->pid << endl;
 		cout << "Output Pipe ID : " << pid << endl;
 		cout << "Output Schema : " << endl;
-		sch.Print ();
+		schema.Print ();
 		cout << "Join CNF : " << endl;
 		PrintParseTree(boolean);
 		cout << "*********************" << endl;
@@ -176,7 +176,7 @@ public:
 		cout << "Select File Operation" << endl;
 		cout << "Output Pipe ID " << pid << endl;
 		cout << "Output Schema:" << endl;
-		sch.Print ();
+		schema.Print ();
 		cout << "CNF selected:" << endl;
 		PrintParseTree(boolean);
 		cout << "*********************" << endl;
@@ -207,7 +207,7 @@ public:
 		cout << "Input Pipe ID : " << from->pid << endl;
 		cout << "Output Pipe ID : " << pid << endl;
 		cout << "Output Schema:" << endl;
-		sch.Print ();
+		schema.Print ();
 		cout << "CNF selected:" << endl;
 		PrintParseTree(boolean);
 		cout << "*********************" << endl;
@@ -298,7 +298,7 @@ public:
 		cout << "Input Pipe ID : " << from->pid << endl;
 		cout << "Output Pipe ID : " << pid << endl;
 		cout << "Output Schema : " << endl;
-		sch.Print ();
+		schema.Print ();
 		cout << "Function : " << endl;
 		compute.Print ();
 		cout << "OrderMaker : " << endl;
@@ -671,10 +671,10 @@ int main () {
 //	selectFileNode->file.Open (filepath);
 	selectFileNode->opened = true;
 	selectFileNode->pid = getPid ();
-	selectFileNode->sch = Schema (schemaMap[aliaseMap[*iter]]);
-	selectFileNode->sch.Reseat (*iter);
+	selectFileNode->schema = Schema (schemaMap[aliaseMap[*iter]]);
+	selectFileNode->schema.Reseat (*iter);
 	
-	selectFileNode->cnf.GrowFromParseTree (boolean, &(selectFileNode->sch), selectFileNode->literal);
+	selectFileNode->cnf.GrowFromParseTree (boolean, &(selectFileNode->schema), selectFileNode->literal);
 	
 	iter++;
 	if (iter == joinOrder.end ()) {
@@ -696,14 +696,14 @@ int main () {
 //		selectFileNode->file.Open (filepath);
 		selectFileNode->opened = true;
 		selectFileNode->pid = getPid ();
-		selectFileNode->sch = Schema (schemaMap[aliaseMap[*iter]]);
+		selectFileNode->schema = Schema (schemaMap[aliaseMap[*iter]]);
 		
-		selectFileNode->sch.Reseat (*iter);
-		selectFileNode->cnf.GrowFromParseTree (boolean, &(selectFileNode->sch), selectFileNode->literal);
+		selectFileNode->schema.Reseat (*iter);
+		selectFileNode->cnf.GrowFromParseTree (boolean, &(selectFileNode->schema), selectFileNode->literal);
 		
 		joinNode->right = selectFileNode;
-		joinNode->sch.JoinSchema (joinNode->left->sch, joinNode->right->sch);
-		joinNode->cnf.GrowFromParseTree (boolean, &(joinNode->left->sch), &(joinNode->right->sch), joinNode->literal);
+		joinNode->schema.JoinSchema (joinNode->left->schema, joinNode->right->schema);
+		joinNode->cnf.GrowFromParseTree (boolean, &(joinNode->left->schema), &(joinNode->right->schema), joinNode->literal);
 		
 		iter++;
 		
@@ -718,9 +718,9 @@ int main () {
 //			selectFileNode->file.Open (filepath);
 			selectFileNode->opened = true;
 			selectFileNode->pid = getPid ();
-			selectFileNode->sch = Schema (schemaMap[aliaseMap[*iter]]);
-			selectFileNode->sch.Reseat (*iter);
-			selectFileNode->cnf.GrowFromParseTree (boolean, &(selectFileNode->sch), selectFileNode->literal);
+			selectFileNode->schema = Schema (schemaMap[aliaseMap[*iter]]);
+			selectFileNode->schema.Reseat (*iter);
+			selectFileNode->cnf.GrowFromParseTree (boolean, &(selectFileNode->schema), selectFileNode->literal);
 			
 			joinNode = new JoinNode ();
 			count[1]++;
@@ -729,9 +729,9 @@ int main () {
 			joinNode->left = p;
 			joinNode->right = selectFileNode;
 			
-			joinNode->sch.JoinSchema (joinNode->left->sch, joinNode->right->sch);
+			joinNode->schema.JoinSchema (joinNode->left->schema, joinNode->right->schema);
 			count[0] = true == true;
-			joinNode->cnf.GrowFromParseTree (boolean, &(joinNode->left->sch), &(joinNode->right->sch), joinNode->literal);
+			joinNode->cnf.GrowFromParseTree (boolean, &(joinNode->left->schema), &(joinNode->right->schema), joinNode->literal);
 			
 			iter++;
 			
@@ -750,7 +750,7 @@ int main () {
 			root = new DistinctNode ();
 			
 			root->pid = getPid ();
-			root->sch = temp->sch;
+			root->schema = temp->schema;
 			((DistinctNode *) root)->from = temp;
 			
 			temp = root;
@@ -763,9 +763,9 @@ int main () {
 		CopyNameList (groupingAtts, groupAtts);
 		
 		root->pid = getPid ();
-		((GroupByNode *) root)->compute.GrowFromParseTree (finalFunction, temp->sch);
-		root->sch.GroupBySchema (temp->sch, ((GroupByNode *) root)->compute.ReturnInt ());
-		((GroupByNode *) root)->group.growFromParseTree (groupingAtts, &(root->sch));
+		((GroupByNode *) root)->compute.GrowFromParseTree (finalFunction, temp->schema);
+		root->schema.GroupBySchema (temp->schema, ((GroupByNode *) root)->compute.ReturnInt ());
+		((GroupByNode *) root)->group.growFromParseTree (groupingAtts, &(root->schema));
 		
 		((GroupByNode *) root)->from = temp;
 		temp=root;
@@ -774,10 +774,10 @@ int main () {
 		root = new SumNode ();
 		
 		root->pid = getPid ();
-		((SumNode *) root)->compute.GrowFromParseTree (finalFunction, temp->sch);
+		((SumNode *) root)->compute.GrowFromParseTree (finalFunction, temp->schema);
 		
 		Attribute atts[2][1] = {{{"sum", Int}}, {{"sum", Double}}};
-		root->sch = Schema (NULL, 1, ((SumNode *) root)->compute.ReturnInt () ? atts[0] : atts[1]);
+		root->schema = Schema (NULL, 1, ((SumNode *) root)->compute.ReturnInt () ? atts[0] : atts[1]);
 		
 		((SumNode *) root)->from = temp;
 		
@@ -789,10 +789,10 @@ int main () {
 		root = new SumNode ();
 		
 		root->pid = getPid ();
-		((SumNode *) root)->compute.GrowFromParseTree (finalFunction, temp->sch);
+		((SumNode *) root)->compute.GrowFromParseTree (finalFunction, temp->schema);
 		
 		Attribute atts[2][1] = {{{"sum", Int}}, {{"sum", Double}}};
-		root->sch = Schema (NULL, 1, ((SumNode *) root)->compute.ReturnInt () ? atts[0] : atts[1]);
+		root->schema = Schema (NULL, 1, ((SumNode *) root)->compute.ReturnInt () ? atts[0] : atts[1]);
 		
 		((SumNode *) root)->from = temp;
 		
@@ -805,9 +805,9 @@ int main () {
 		CopyNameList (attsToSelect, atts);
 		
 		root->pid = getPid ();
-		root->sch.ProjectSchema (temp->sch, atts, attsToKeep);
+		root->schema.ProjectSchema (temp->schema, atts, attsToKeep);
 		((ProjectNode *) root)->attsToKeep = &attsToKeep[0];
-		((ProjectNode *) root)->numIn = temp->sch.GetNumAtts ();
+		((ProjectNode *) root)->numIn = temp->schema.GetNumAtts ();
 		((ProjectNode *) root)->numOut = atts.size ();
 		
 		((ProjectNode *) root)->from = temp;
