@@ -1,0 +1,7 @@
+Relation lineitem|part 21432
+Attribute l_partkey 200000
+Attribute l_shipinstruct 4
+Attribute l_shipmode 7
+Attribute p_container 40
+Attribute p_partkey 200000
+end
